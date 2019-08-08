@@ -9,13 +9,23 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <!-- <script src='mapbox-gl-supported.js'></script> -->
+
+    <!-- DO NOT COPY THESE LINKS, LEAVE THE LINKS THAT ARE ALREADY IMPLEMENTED IN THE PRODUCTION CODE, THIS CODE IS JUST FOR TESTING -->
     <script
         src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.0/mapbox-gl-directions.js'></script>
     <script src='https://static-assets.mapbox.com/gl-pricing/dist/mapbox-gl.js'></script>
+    <script src='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.css' rel='stylesheet' />
+
+
+    <!-- links for old browswer support mapbox version -->
     <link href='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
     <link rel='stylesheet'
         href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.0/mapbox-gl-directions.css'
+        type='text/css' />
+    <script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script>
+    <link rel='stylesheet'
+        href='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.css'
         type='text/css' />
 
 
@@ -29,11 +39,8 @@
     <script>
 
         $(document).ready(function () {
-            console.log(mapboxgl.supported.prototype.constructor.name)
 
-
-
-
+            //if the broswer supports new technology, use new map
             if (mapboxgl.supported.prototype.constructor.name === "e") {
                 mapboxgl.accessToken =
                     "pk.eyJ1IjoianVzdGluLXNpbmdoMTI1MTI1IiwiYSI6ImNqdWZyNnZ2cjBlOWE0ZHMwcmtmZHplZTYifQ.DAhYIBcY0njVRPDeJ0Jwpw";
@@ -42,12 +49,81 @@
                 var map = new mapboxgl.Map({
                     container: "map",
                     style: "mapbox://styles/mapbox/streets-v11",
+                    // longitude, latitude
                     center: [-71.05948, 42.35894],
                     zoom: 7
                 });
             }
+            //if the broswer does not support new technology, then use this map
             else {
-                console.log("this map does not work")
+
+                L.mapbox.accessToken = 'pk.eyJ1IjoianVzdGluLXNpbmdoMTI1MTI1IiwiYSI6ImNqdWZyNnZ2cjBlOWE0ZHMwcmtmZHplZTYifQ.DAhYIBcY0njVRPDeJ0Jwpw';
+                // Create a map in the div #map
+                var map = L.mapbox.map('map', 'mapbox.streets');
+
+
+
+                //*******************IMPORTANT************************
+                //for setview it is latitude first and then longitude, 
+                //it is reversed in new versions of mapbox
+                //zooms in on desired location, second argument is the zoom
+                map.setView([42.35894, -71.05948], 7);
+                //*******************IMPORTANT************************
+
+
+                //create a geoJson array object, this is were we will push to
+                //we will have to change the new way of geoJson to this way of geoJson for older browser support
+                //this is test data of how you render pins onto the map the old way
+                var geoJson = [
+                    //array element 0
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            //*******************IMPORTANT************************
+                            // coordinates here are in longitude, latitude order because
+                            // x, y is the standard for GeoJSON and many formats
+                            coordinates: [-71.05948, 42.35894]
+                            //*******************IMPORTANT************************
+
+                        },
+                        properties: {
+                            title: 'Peregrine Espresso',
+                            description: '1718 14th St NW, Washington, DC',
+                            // one can customize markers by adding simplestyle properties
+                            // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+                            'marker-size': 'medium',
+                            'marker-color': '#ff8888',
+                            //the empty symbol will put a play marker
+                            'marker-symbol': ''
+                        }
+                    },
+                    //array element 1
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            //*******************IMPORTANT************************
+                            // coordinates here are in longitude, latitude order because
+                            // x, y is the standard for GeoJSON and many formats
+                            coordinates: [-71.05948, 41.55894]
+                            //*******************IMPORTANT************************
+
+                        },
+                        properties: {
+                            title: 'Peregrine Espresso',
+                            description: '1718 14th St NW, Washington, DC',
+                            // one can customize markers by adding simplestyle properties
+                            // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+                            'marker-size': 'medium',
+                            'marker-color': '#ff8888',
+                            'marker-symbol': ''
+                        }
+                    }
+                ]
+
+                //this renders the whole array of pins to the map
+                L.mapbox.featureLayer(geoJson).addTo(map);
             }
 
         })
