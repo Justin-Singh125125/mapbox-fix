@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src='mapbox-gl-supported.js'></script>
+    <script
+        src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.0/mapbox-gl-directions.js'></script>
+    <script src='https://static-assets.mapbox.com/gl-pricing/dist/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel='stylesheet'
+        href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.0/mapbox-gl-directions.css'
+        type='text/css' />
+
+
+</head>
+
+<body>
+    <div id='map' style='width: 100%; height: 500px;'></div>
+
+
+
+    <script>
+
+        $(document).ready(function () {
+            console.log(mapboxgl.supported.prototype.constructor.name)
+
+
+
+
+            if (mapboxgl.supported.prototype.constructor.name === "e") {
+                mapboxgl.accessToken =
+                    "pk.eyJ1IjoianVzdGluLXNpbmdoMTI1MTI1IiwiYSI6ImNqdWZyNnZ2cjBlOWE0ZHMwcmtmZHplZTYifQ.DAhYIBcY0njVRPDeJ0Jwpw";
+
+                //actual map instantiation
+                var map = new mapboxgl.Map({
+                    container: "map",
+                    style: "mapbox://styles/mapbox/streets-v11",
+                    center: [-71.05948, 42.35894],
+                    zoom: 7
+                });
+            }
+            else {
+                console.log("this map does not work")
+            }
+
+        })
+
+    </script>
+
+
+</body>
+
+</html>
